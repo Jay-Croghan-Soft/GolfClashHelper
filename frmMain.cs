@@ -64,14 +64,14 @@ namespace GolfClashHelper
 
                 foreach (Courselink course in tour.CourseLinks)
                 {
-                    
+
                     string courseXML = Path.Combine(dataPath, course.Name) + "\\course.xml";
 
                     try
                     {
                         LoadCourse(courseXML);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Logger.Error(ex, Strings.COURSE_LOAD_ERROR);
                     }
@@ -155,7 +155,7 @@ namespace GolfClashHelper
                 {
                     PictureBox pic = AddHoleImage(course.Name, hole, x, y);
                     pic.Image = Image.FromFile(hole.HoleImage);
-                    
+
                     if (index == ImageColumns)
                     {
                         x = ImageMargin;
@@ -216,6 +216,10 @@ namespace GolfClashHelper
         {
             while (ctrl.Controls.Count > 0)
             {
+                if (ctrl.Controls[0].Controls?.Count > 0)
+                {
+                    RemoveAllChildControls(ctrl.Controls[0]);
+                }
                 ctrl.Controls[0].Dispose();
             }
         }
@@ -245,7 +249,7 @@ namespace GolfClashHelper
         {
             Keys[] acceptableKeys = { Keys.Left, Keys.Right, Keys.Up, Keys.Down, Keys.PageDown, Keys.PageUp, Keys.Home, Keys.End };
             Control[] acceptableControls = { chkPar3s };
-            
+
             if ((this.ActiveControl == null || acceptableControls.Contains(this.ActiveControl)) && (acceptableKeys.Contains(keyData)))
             {
                 return panelCourses.ProcessCmdKeyPublic(ref msg, keyData);
@@ -365,7 +369,7 @@ namespace GolfClashHelper
             tmpPicture.Controls.Add(tmpElevation);
             tmpElevation.AutoSize = false;
             tmpElevation.Name = string.Format("label_name_{0}_{1}", course, hole.ID);
-            
+
             tmpElevation.Size = new System.Drawing.Size(tmpPicture.Width, (tmpPicture.Height / 10));
 
             tmpElevation.Font = new System.Drawing.Font("Segoe UI", (tmpPicture.Height / 10F) / 2.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
@@ -394,6 +398,7 @@ namespace GolfClashHelper
 
         private void CheckPar3s_CheckedChanged(object sender, EventArgs e)
         {
+            RemoveGuideImage();
             AddImages(chkPar3s.Checked);
         }
 
@@ -408,7 +413,7 @@ namespace GolfClashHelper
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach(Course course in Courses)
+            foreach (Course course in Courses)
             {
                 course.SaveXML(course.Folder + @"\course.xml");
             }
@@ -416,7 +421,19 @@ namespace GolfClashHelper
 
         private void ComboTours_SelectedValueChanged(object sender, EventArgs e)
         {
+            RemoveGuideImage();
             AddImages(chkPar3s.Checked);
+        }
+
+        private void RemoveGuideImage()
+        {
+            foreach (Control ctrl in this.Controls)
+            {
+                if (ctrl.Name.StartsWith("pictureBox_guide_"))
+                {
+                    this.guideBox_Clicked(ctrl, null);
+                }
+            }
         }
     }
 }
