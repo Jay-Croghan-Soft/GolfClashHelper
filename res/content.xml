@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Contents xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Version>1</Version>
+  <Tours>
+    <Tour>
+      <Name>Tour 9</Name>
+      <CourseLinks>
+        <Courselink>
+          <Name>Shiruba Springs</Name>
+        </Courselink>
+        <Courselink>
+          <Name>Glenmonarch Estate</Name>
+        </Courselink>
+        <Courselink>
+          <Name>The Milano</Name>
+        </Courselink>
+      </CourseLinks>
+    </Tour>
+    <Tour>
+      <Name>Tour 10</Name>
+      <CourseLinks>
+        <Courselink>
+          <Name>Nordic Fjords</Name>
+        </Courselink>
+        <Courselink>
+          <Name>Gokasho Bay</Name>
+        </Courselink>
+        <Courselink>
+          <Name>Sequoia Creek</Name>
+        </Courselink>
+      </CourseLinks>
+    </Tour>
+  </Tours>
+</Contents>

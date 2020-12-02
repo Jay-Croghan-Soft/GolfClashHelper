@@ -1,0 +1,21 @@
+{
+	"Version": 1,
+	"Tours":
+	[
+		{
+			"Name": "Tour 9",
+			"CourseLinks":
+			[
+				{
+					"Name": "Shiruba Springs"
+				},
+				{
+					"Name": "Glenmonarch Estate"
+				},
+				{
+					"Name": "The Milano"
+				}
+			]
+		}
+	]
+}
