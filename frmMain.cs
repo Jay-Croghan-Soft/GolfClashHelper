@@ -21,7 +21,7 @@ namespace GolfClashHelper
     public partial class frmMain : Form
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
+        private static Properties.Settings Settings;
         private List<PictureBox> formPictureBoxes = new List<PictureBox>();
         private List<Course> Courses = new List<Course>();
         private List<Tour> Tours = new List<Tour>();
@@ -34,6 +34,7 @@ namespace GolfClashHelper
 
         public frmMain()
         {
+            Settings = Properties.Settings.Default;
             InitializeComponent();
         }
 
@@ -52,8 +53,8 @@ namespace GolfClashHelper
             // Load the main XML file with the tour information.
             string appPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             string dataPath = Path.Combine(appPath, "res");
-            string dataFile = dataPath + "\\content.xml";
-            Contents contents = Contents.LoadXML(dataPath + "\\content.xml");
+            string dataFile = dataPath + "\\" + Constants.CONTENT_FILE;
+            Contents contents = Contents.LoadXML(dataFile);
             Tours = contents.Tours.ToList();
 
             TotalHoles = Tours.Sum(t => t.CourseLinks.Length) * 9;
@@ -65,7 +66,7 @@ namespace GolfClashHelper
                 foreach (Courselink course in tour.CourseLinks)
                 {
 
-                    string courseXML = Path.Combine(dataPath, course.Name) + "\\course.xml";
+                    string courseXML = Path.Combine(dataPath, course.Name) + "\\" + Constants.COURSE_FILE;
 
                     try
                     {
@@ -130,47 +131,87 @@ namespace GolfClashHelper
 
         private void AddImages(bool onlyPar3s = false)
         {
-            RemoveAllChildControls(this.panelCourses);
-            formPictureBoxes.Clear();
-
-            if (Tours.Count == 0)
-            {
-                return;
-            }
-
-            int index = 1;
-            int x = 0;
-            int y = 0;
             this.SuspendLayout();
-            y = 0;
-            x = ImageMargin;
+            this.panelCourses.SuspendLayout();
 
-            Tour selectedTour = Tours.Where(t => t.Name == cboTours.SelectedItem.ToString()).First();
 
-            foreach (Course course in Courses.Where(c => selectedTour.CourseLinks.Any(l => l.Name == c.Name)))
+            try
             {
-                var holes = course.Holes.Where(h => (onlyPar3s ? h.Par == 3 : h.Par > 0));
-                Console.Out.WriteLine("Count: {0}", holes.Count());
-                foreach (Hole hole in holes)
-                {
-                    PictureBox pic = AddHoleImage(course.Name, hole, x, y);
-                    pic.Image = Image.FromFile(hole.HoleImage);
+                RemoveAllChildControls(this.panelCourses);
+                formPictureBoxes.Clear();
 
-                    if (index == ImageColumns)
+                if (Tours.Count == 0)
+                {
+                    return;
+                }
+
+                int index = 1;
+                int x = 0;
+                int y = 0;
+
+                y = 0;
+                x = ImageMargin;
+
+                Tour selectedTour = Tours.Where(t => t.Name == cboTours.SelectedItem.ToString()).First();
+
+                foreach (Course course in Courses.Where(c => selectedTour.CourseLinks.Any(l => l.Name == c.Name)))
+                {
+                    var holes = course.Holes.Where(h => (onlyPar3s ? h.Par == 3 : h.Par > 0));
+                    Console.Out.WriteLine("Count: {0}", holes.Count());
+                    foreach (Hole hole in holes)
                     {
-                        x = ImageMargin;
-                        y += ImageMargin + ImageHeight;
-                        index = 1;
-                    }
-                    else
-                    {
-                        x = ImageWidth * index + (ImageMargin * (index + 1));
-                        index++;
+                        PictureBox pic = AddHoleImage(course.Name, hole, x, y);
+
+                        /*
+                        // Keep loaded images setting?
+                        Image imgHole = null;
+                        if (!Settings.EarlyLoadImages && hole.HoleImageBitmap == null)
+                        {
+                            hole.HoleImageBitmap = Image.FromFile(hole.HoleImage);
+                        }
+                        */
+
+                        if (!hole.HoleImage.Equals(Constants.X))
+                        {
+                            if (Settings.EarlyLoadImages)
+                            {
+                                pic.Image = hole.HoleImageBitmap;
+                            }
+                            else
+                            {
+                                pic.Image = Image.FromFile(hole.HoleImage);
+                            }
+                        }
+                        else
+                        {
+                            pic.Image = Resources.Images.no_image;
+                        }
+                        
+
+                        if (index == ImageColumns)
+                        {
+                            x = ImageMargin;
+                            y += ImageMargin + ImageHeight;
+                            index = 1;
+                        }
+                        else
+                        {
+                            x = ImageWidth * index + (ImageMargin * (index + 1));
+                            index++;
+                        }
                     }
                 }
             }
+            catch (Exception)
+            {
 
-            this.ResumeLayout(false);
+                throw;
+            }
+            finally
+            {
+                this.ResumeLayout(false);
+                this.panelCourses.ResumeLayout(false);
+            }
         }
 
         void LoadCourse(string courseFile)
@@ -185,26 +226,34 @@ namespace GolfClashHelper
 
                 UpdatePercentage(TotalHoles, (Courses.Count * 9) + currentHole);
 
-                string imagePath = Path.Combine(course.Folder, hole.ID.ToString()) + ".png";
+                string imagePath = Path.Combine(course.Folder, hole.ID.ToString()) + Constants.PNG_EXT;
 
                 if (File.Exists(imagePath))
                 {
                     hole.HoleImage = imagePath; //Image.FromFile(imagePath);
+                    if (Settings.EarlyLoadImages)
+                    {
+                        hole.HoleImageBitmap = Image.FromFile(imagePath);
+                    }
                 }
                 else
                 {
-                    hole.HoleImage = "X"; //Images.no_image;
+                    hole.HoleImage = Constants.X; //Images.no_image;
                 }
 
 
-                imagePath = Path.Combine(course.Folder, hole.ID.ToString()) + "_guide.png";
+                imagePath = Path.Combine(course.Folder, hole.ID.ToString()) + Constants.GUIDE_FILE;
                 if (File.Exists(imagePath))
                 {
                     hole.GuideImage = imagePath; // Image.FromFile(imagePath);
+                    if (Settings.EarlyLoadImages)
+                    {
+                        hole.GuideImageBitmap = Image.FromFile(imagePath);
+                    }
                 }
                 else
                 {
-                    hole.GuideImage = "X"; // Images.no_image;
+                    hole.GuideImage = Constants.X; // Images.no_image;
                 }
 
                 hole.CourseName = course.Name;
@@ -231,7 +280,7 @@ namespace GolfClashHelper
             {
                 hole.Comment = textBox.Text;
                 Course course = Courses.Find(t => t.Holes.Contains(hole));
-                course.SaveXML(course.Folder + @"\course.xml");
+                course.SaveXML(course.Folder + @"\" + Constants.COURSE_FILE);
             }
         }
 
@@ -269,13 +318,29 @@ namespace GolfClashHelper
             ((ISupportInitialize)(tmpPicture)).BeginInit();
             this.Controls.Add(tmpPicture);
             tmpPicture.Location = new System.Drawing.Point(ImageMargin, ImageMargin);
-            tmpPicture.Name = string.Format("pictureBox_guide_{0}_{1}", hole.CourseName.Replace(" ", "_"), hole.ID);
+            tmpPicture.Name = string.Format("{0}{1}_{2}", Constants.PIC_GUIDE_CONTROL_PREFIX, hole.CourseName.Replace(" ", "_"), hole.ID);
             tmpPicture.Size = new System.Drawing.Size((this.Width - ImageMargin * 2), this.Height - (ImageMargin * 2));
             tmpPicture.TabIndex = 0;
             tmpPicture.BorderStyle = BorderStyle.FixedSingle;
             tmpPicture.SizeMode = PictureBoxSizeMode.Zoom;
             tmpPicture.TabStop = false;
-            tmpPicture.Image = Image.FromFile(hole.GuideImage);
+
+            if (!hole.GuideImage.Equals(Constants.X))
+            {
+                if (Settings.EarlyLoadImages)
+                {
+                    tmpPicture.Image = hole.GuideImageBitmap;
+                }
+                else
+                {
+                    tmpPicture.Image = Image.FromFile(hole.GuideImage);
+                }
+            }
+            else
+            {
+                tmpPicture.Image = Resources.Images.no_image;
+            }
+
             tmpPicture.Click += new System.EventHandler(this.guideBox_Clicked);
             AddCommentButton(tmpPicture, hole);
             panelCourses.Visible = false;
@@ -415,7 +480,7 @@ namespace GolfClashHelper
         {
             foreach (Course course in Courses)
             {
-                course.SaveXML(course.Folder + @"\course.xml");
+                course.SaveXML(course.Folder + @"\" + Constants.COURSE_FILE);
             }
         }
 
@@ -429,10 +494,69 @@ namespace GolfClashHelper
         {
             foreach (Control ctrl in this.Controls)
             {
-                if (ctrl.Name.StartsWith("pictureBox_guide_"))
+                if (ctrl.Name.StartsWith(Constants.PIC_GUIDE_CONTROL_PREFIX))
                 {
                     this.guideBox_Clicked(ctrl, null);
                 }
+            }
+        }
+
+        private void LoadSettings()
+        {
+            chkEarlyLoadImages.Checked = Settings.EarlyLoadImages;
+
+            panelSettings.Visible = true;
+            panelSettings.BringToFront();
+        }
+
+        private void SaveSettings()
+        {
+            try
+            {
+                Settings.EarlyLoadImages = chkEarlyLoadImages.Checked;
+
+                Settings.Save();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private void cmdSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SaveSettings();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(Strings.SAVE_SETTINGS_ERROR);
+                Logger.Error(ex, Strings.SAVE_SETTINGS_ERROR);
+            }
+            finally
+            {
+                panelSettings.Visible = false;
+                Application.Restart();
+            }
+        }
+
+        private void cmdCancel_Click(object sender, EventArgs e)
+        {
+            panelSettings.Visible = false;
+        }
+
+        private void cmdSettings_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LoadSettings();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(Strings.SAVE_SETTINGS_ERROR);
+                Logger.Error(ex, Strings.SAVE_SETTINGS_ERROR);
+                panelSettings.Visible = false;
             }
         }
     }

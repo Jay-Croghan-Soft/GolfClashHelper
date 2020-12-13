@@ -70,11 +70,29 @@ namespace GolfClashHelper.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Early Load Images.
+        /// </summary>
+        internal static string EARLY_LOAD_IMAGES {
+            get {
+                return ResourceManager.GetString("EARLY_LOAD_IMAGES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while loading the main form..
         /// </summary>
         internal static string FORM_LOAD_ERROR {
             get {
                 return ResourceManager.GetString("FORM_LOAD_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while saving settings..
+        /// </summary>
+        internal static string SAVE_SETTINGS_ERROR {
+            get {
+                return ResourceManager.GetString("SAVE_SETTINGS_ERROR", resourceCulture);
             }
         }
     }

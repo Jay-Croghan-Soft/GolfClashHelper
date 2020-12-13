@@ -54,7 +54,7 @@
 
         public void ReadXml(System.Xml.XmlReader reader)
         {
-            _value = reader.ReadElementString();
+            _value = reader.ReadElementContentAsString().Replace("\n","\r\n");
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)

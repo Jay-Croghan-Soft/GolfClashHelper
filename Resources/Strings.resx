@@ -120,7 +120,13 @@
   <data name="COURSE_LOAD_ERROR" xml:space="preserve">
     <value>Error while loading course file.</value>
   </data>
+  <data name="EARLY_LOAD_IMAGES" xml:space="preserve">
+    <value>Early Load Images</value>
+  </data>
   <data name="FORM_LOAD_ERROR" xml:space="preserve">
     <value>Error while loading the main form.</value>
+  </data>
+  <data name="SAVE_SETTINGS_ERROR" xml:space="preserve">
+    <value>Error while saving settings.</value>
   </data>
 </root>

@@ -32,6 +32,13 @@ namespace GolfClashHelper
             this.panelCourses = new GolfClashHelper.SelectablePanel();
             this.chkPar3s = new System.Windows.Forms.CheckBox();
             this.cboTours = new System.Windows.Forms.ComboBox();
+            this.panelSettings = new System.Windows.Forms.Panel();
+            this.cmdCancel = new System.Windows.Forms.Button();
+            this.cmdSave = new System.Windows.Forms.Button();
+            this.chkEarlyLoadImages = new System.Windows.Forms.CheckBox();
+            this.lblSettingsTitle = new System.Windows.Forms.Label();
+            this.cmdSettings = new System.Windows.Forms.Button();
+            this.panelSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelCourses
@@ -72,20 +79,96 @@ namespace GolfClashHelper
             this.cboTours.TabIndex = 2;
             this.cboTours.SelectedValueChanged += new System.EventHandler(this.ComboTours_SelectedValueChanged);
             // 
+            // panelSettings
+            // 
+            this.panelSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelSettings.Controls.Add(this.cmdCancel);
+            this.panelSettings.Controls.Add(this.cmdSave);
+            this.panelSettings.Controls.Add(this.chkEarlyLoadImages);
+            this.panelSettings.Controls.Add(this.lblSettingsTitle);
+            this.panelSettings.Location = new System.Drawing.Point(1, 1);
+            this.panelSettings.Name = "panelSettings";
+            this.panelSettings.Size = new System.Drawing.Size(703, 342);
+            this.panelSettings.TabIndex = 3;
+            this.panelSettings.Visible = false;
+            // 
+            // cmdCancel
+            // 
+            this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdCancel.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmdCancel.Location = new System.Drawing.Point(562, 279);
+            this.cmdCancel.Name = "cmdCancel";
+            this.cmdCancel.Size = new System.Drawing.Size(125, 46);
+            this.cmdCancel.TabIndex = 3;
+            this.cmdCancel.Text = "&Cancel";
+            this.cmdCancel.UseVisualStyleBackColor = true;
+            this.cmdCancel.Click += new System.EventHandler(this.cmdCancel_Click);
+            // 
+            // cmdSave
+            // 
+            this.cmdSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdSave.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmdSave.Location = new System.Drawing.Point(431, 279);
+            this.cmdSave.Name = "cmdSave";
+            this.cmdSave.Size = new System.Drawing.Size(125, 46);
+            this.cmdSave.TabIndex = 2;
+            this.cmdSave.Text = "&Save";
+            this.cmdSave.UseVisualStyleBackColor = true;
+            this.cmdSave.Click += new System.EventHandler(this.cmdSave_Click);
+            // 
+            // chkEarlyLoadImages
+            // 
+            this.chkEarlyLoadImages.AutoSize = true;
+            this.chkEarlyLoadImages.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.chkEarlyLoadImages.Location = new System.Drawing.Point(11, 50);
+            this.chkEarlyLoadImages.Name = "chkEarlyLoadImages";
+            this.chkEarlyLoadImages.Size = new System.Drawing.Size(224, 36);
+            this.chkEarlyLoadImages.TabIndex = 1;
+            this.chkEarlyLoadImages.Tag = "EARLY_LOAD_IMAGES";
+            this.chkEarlyLoadImages.Text = "Early Load Images";
+            this.chkEarlyLoadImages.UseVisualStyleBackColor = true;
+            // 
+            // lblSettingsTitle
+            // 
+            this.lblSettingsTitle.AutoSize = true;
+            this.lblSettingsTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblSettingsTitle.Location = new System.Drawing.Point(11, 8);
+            this.lblSettingsTitle.Name = "lblSettingsTitle";
+            this.lblSettingsTitle.Size = new System.Drawing.Size(106, 32);
+            this.lblSettingsTitle.TabIndex = 0;
+            this.lblSettingsTitle.Text = "Settings";
+            // 
+            // cmdSettings
+            // 
+            this.cmdSettings.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmdSettings.Location = new System.Drawing.Point(200, 7);
+            this.cmdSettings.Name = "cmdSettings";
+            this.cmdSettings.Size = new System.Drawing.Size(137, 36);
+            this.cmdSettings.TabIndex = 4;
+            this.cmdSettings.Text = "Settings";
+            this.cmdSettings.UseVisualStyleBackColor = true;
+            this.cmdSettings.Click += new System.EventHandler(this.cmdSettings_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(700, 338);
+            this.Controls.Add(this.panelSettings);
             this.Controls.Add(this.cboTours);
             this.Controls.Add(this.chkPar3s);
             this.Controls.Add(this.panelCourses);
+            this.Controls.Add(this.cmdSettings);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmMain";
             this.Text = "Golf Clash Helper";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.Resize += new System.EventHandler(this.frmMain_Resize);
+            this.panelSettings.ResumeLayout(false);
+            this.panelSettings.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -96,6 +179,12 @@ namespace GolfClashHelper
         private SelectablePanel panelCourses;
         private System.Windows.Forms.CheckBox chkPar3s;
         private System.Windows.Forms.ComboBox cboTours;
+        private System.Windows.Forms.Panel panelSettings;
+        private System.Windows.Forms.Label lblSettingsTitle;
+        private System.Windows.Forms.CheckBox chkEarlyLoadImages;
+        private System.Windows.Forms.Button cmdCancel;
+        private System.Windows.Forms.Button cmdSave;
+        private System.Windows.Forms.Button cmdSettings;
     }
 }
 

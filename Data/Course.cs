@@ -56,10 +56,12 @@
 
         [XmlIgnore]
         public string HoleImage { get; set; }
-        
+        [XmlIgnore]
+        public Image HoleImageBitmap { get; set; }
         [XmlIgnore]
         public string GuideImage { get; set; }
-        
+        [XmlIgnore]
+        public Image GuideImageBitmap { get; set; }
         [XmlIgnore]
         public string CourseName { get; set; }
     }
