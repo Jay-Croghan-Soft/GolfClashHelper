@@ -131,7 +131,7 @@ namespace GolfClashHelper
 
         private void AddImages(bool onlyPar3s = false)
         {
-            this.SuspendLayout();
+            this.SuspendLayout();            
             this.panelCourses.SuspendLayout();
 
 
@@ -209,8 +209,8 @@ namespace GolfClashHelper
             }
             finally
             {
-                this.ResumeLayout(false);
-                this.panelCourses.ResumeLayout(false);
+                this.ResumeLayout(true);
+                this.panelCourses.ResumeLayout(true);
             }
         }
 
@@ -261,8 +261,14 @@ namespace GolfClashHelper
 
             Courses.Add(course);
         }
+
         private static void RemoveAllChildControls(Control ctrl)
         {
+            if (typeof(ScrollableControl).IsAssignableFrom(ctrl.GetType()))
+            {
+                (ctrl as ScrollableControl).AutoScrollPosition = new Point(0, 0);
+            }
+
             while (ctrl.Controls.Count > 0)
             {
                 if (ctrl.Controls[0].Controls?.Count > 0)
